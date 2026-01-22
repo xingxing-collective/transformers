@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "name": "transformers",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "bun run --conditions=browser ./src/index.ts"
+  },
+  "dependencies": {
+    "yargs": "18.0.0"
+  },
+  "devDependencies": {
+    "@types/yargs": "17.0.35"
+  }
+}
