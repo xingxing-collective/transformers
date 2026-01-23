@@ -1,5 +1,6 @@
 import yargs from 'yargs'
 import { hideBin } from "yargs/helpers"
+import { TranslationCommand } from "./cli/cmd/translation"
 
 
 const cli = yargs(hideBin(process.argv))
@@ -8,6 +9,7 @@ const cli = yargs(hideBin(process.argv))
   .wrap(100)
   .help("help", "show help")
   .alias("help", "h")
+  .command(TranslationCommand)
 
 try {
   await cli.parse()
