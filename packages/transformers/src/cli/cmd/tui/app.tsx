@@ -1,15 +1,18 @@
-import { createCliRenderer, TextAttributes } from "@opentui/core"
-import { createRoot } from "@opentui/react";
+import { createCliRenderer } from "@opentui/core"
+import { createRoot, useTerminalDimensions } from "@opentui/react";
+import { Home } from "./routes/home";
 
 function App() {
+  const dimensions = useTerminalDimensions()
+
   return (
-    <box alignItems="center" justifyContent="center" flexGrow={1}>
-      <box justifyContent="center" alignItems="flex-end">
-        <ascii-font font="tiny" text="Transformers" />
-        <text alignSelf="center" attributes={TextAttributes.DIM}>What will you build?</text>
-      </box>
+    <box
+      width={dimensions.width}
+      height={dimensions.height}
+    >
+      <Home />
     </box>
-  );
+  )
 }
 
 export function tui() {
