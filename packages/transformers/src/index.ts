@@ -1,6 +1,7 @@
 import yargs from 'yargs'
 import { hideBin } from "yargs/helpers"
 import { TranslationCommand } from "./cli/cmd/translation"
+import { TuiThreadCommand } from './cli/cmd/tui/thread'
 
 
 const cli = yargs(hideBin(process.argv))
@@ -9,7 +10,9 @@ const cli = yargs(hideBin(process.argv))
   .wrap(100)
   .help("help", "show help")
   .alias("help", "h")
+  .command(TuiThreadCommand)
   .command(TranslationCommand)
+  .strict()
 
 try {
   await cli.parse()
