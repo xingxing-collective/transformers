@@ -1,5 +1,5 @@
 import { RGBA, MouseEvent } from "@opentui/core";
-import { EmptyBorder } from "../border";
+import { EmptyBorder } from "./border";
 
 export function Prompt() {
 
