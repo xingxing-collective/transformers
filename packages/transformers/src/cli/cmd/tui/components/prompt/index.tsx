@@ -10,6 +10,9 @@ export function Prompt() {
 
   const highlight = () => RGBA.fromValues(0.36, 0.61, 0.96, 1)
 
+  const submit = () => {
+  }
+
   return (
     <>
       <box>
@@ -34,6 +37,7 @@ export function Prompt() {
               placeholder={`Ask anything... "`}
               textColor={theme.text}
               onMouseDown={(r: MouseEvent) => r.target?.focus()}
+              onSubmit={submit}
               focusedTextColor={theme.text}
               minHeight={1}
               maxHeight={6}

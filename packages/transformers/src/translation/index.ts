@@ -1,6 +1,7 @@
 import { pipeline } from "@huggingface/transformers"
 import type {
   PretrainedModelOptions,
+  TextGenerationConfig,
   TranslationOutput,
   TranslationPipeline
 } from "@huggingface/transformers"
@@ -25,14 +26,14 @@ export namespace Translation {
     }
   }
 
-  export interface TranslationConfig {
+  export interface TranslationConfig extends Partial<TextGenerationConfig> {
     src_lang?: TranslationLanguages.LanguageCode
     tgt_lang?: TranslationLanguages.LanguageCode
   }
 
-  export async function translator(text: string, config?: TranslationConfig): Promise<TranslationOutput> {
+  export async function translator(texts: string | string[], config?: TranslationConfig): Promise<TranslationOutput | TranslationOutput[]> {
     const pipeline = await Translation.getInstance();
     // @ts-ignore
-    return await pipeline(text, config);
+    return pipeline(texts, config);
   }
 }

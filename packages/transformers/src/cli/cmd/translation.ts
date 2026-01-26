@@ -40,6 +40,6 @@ export const TranslationCommand = cmd({
       tgt_lang
     })
 
-    console.log(`Text: ${JSON.stringify(output[0]?.translation_text)};`);
+    console.log(`Text: ${JSON.stringify(output)};`);
   }
 })
