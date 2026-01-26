@@ -1,16 +1,17 @@
-import { RGBA, MouseEvent } from "@opentui/core";
+import { KeyEvent, MouseEvent } from "@opentui/core";
 import { EmptyBorder } from "./border";
+import { useTheme } from "../composables/theme";
+import { useRouter } from "../composables/router";
+import clipboardy from "clipboardy"
 
 export function Prompt() {
 
-  const theme = {
-    backgroundElement: RGBA.fromValues(0.12, 0.12, 0.12, 1),
-    text: RGBA.fromValues(0.93, 0.93, 0.93, 1),
-  }
 
-  const highlight = () => RGBA.fromValues(0.36, 0.61, 0.96, 1)
+  const { theme, highlight } = useTheme()
+  const router = useRouter()
 
   const submit = () => {
+    process.exit()
   }
 
   return (
@@ -18,7 +19,7 @@ export function Prompt() {
       <box>
         <box
           border={["left"]}
-          borderColor={highlight()}
+          borderColor={highlight}
           customBorderChars={{
             ...EmptyBorder,
             vertical: "┃",
@@ -38,12 +39,18 @@ export function Prompt() {
               textColor={theme.text}
               onMouseDown={(r: MouseEvent) => r.target?.focus()}
               onSubmit={submit}
+              onKeyDown={(e: KeyEvent) => {
+                if (e.name === 'return') {
+                  e.preventDefault();
+                  router.navigate('session')
+                }
+              }}
               focusedTextColor={theme.text}
               minHeight={1}
               maxHeight={6}
             />
             <box flexDirection="row" flexShrink={0} paddingTop={1} gap={1}>
-              <text fg={highlight()}>
+              <text fg={highlight}>
                 Translation{" "}
               </text>
               <box flexDirection="row" gap={1}>
@@ -57,7 +64,7 @@ export function Prompt() {
         <box
           height={1}
           border={["left"]}
-          borderColor={highlight()}
+          borderColor={highlight}
           customBorderChars={{
             ...EmptyBorder,
             vertical: theme.backgroundElement.a !== 0 ? "╹" : " ",
