@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { SplitBorder } from "../components/border";
 import { useTheme } from "../composables/theme";
+import { useRouter } from "../composables/router";
 
 export interface Message {
   role: 'user' | 'assistant'
@@ -8,14 +9,17 @@ export interface Message {
 }
 
 export function Session() {
-  
-  const [messages, setMessages] = useState<Message[]>([{
-    content: "Hello, how can I help you?",
-    role: "assistant"
-  }, {
-    content: "Can you translate 'Hello World' to French?",
-    role: "user"
-  }])
+
+  const router = useRouter()
+
+  const defaultMessages: Message[] = router.query?.content ? [
+    {
+      role: 'user',
+      content: router.query.content
+    }
+  ] : []
+
+  const [messages, setMessages] = useState<Message[]>(defaultMessages)
 
   const { theme } = useTheme()
   return (

@@ -1,29 +1,39 @@
 import { createContext, useContext, useState, type ReactNode } from "react"
 
 export interface Router {
-  name: 'home' | 'session'
+  name: 'home' | 'session',
+  query?: Record<string, string>
 }
 
 const RouterContext = createContext<{
   route: Router['name'],
-  navigate: (to: Router['name']) => void
+  query?: Router['query'],
+  navigate: (to: Router['name'] | Router) => void
 }>({
   route: 'home',
+  query: {},
   navigate: () => { }
 })
 
 export function RouterProvider({ children }: { children: ReactNode }) {
-  const [route, setRoute] = useState<Router['name']>('home')
+  const [router, setRoute] = useState<Router>({
+    name: 'home',
+    query: {}
+  })
 
   return (
-    <RouterContext.Provider value={{ route, navigate: (to) => setRoute(to) }}>
+    <RouterContext.Provider value={{
+      route: router.name,
+      query: router.query,
+      navigate: (router) => setRoute(typeof router === 'string' ? { name: router } : router)
+    }}>
       {children}
-    </RouterContext.Provider >
+    </RouterContext.Provider>
   )
 }
 
 export const useRouter = () => {
   const context = useContext(RouterContext)
-  if (!context) throw new Error(` RouterCntext must be used within a context provider`)
+  if (!context) throw new Error(`router cntext must be used within a context provider`)
   return context
 }

@@ -12,13 +12,13 @@ function App() {
       height={dimensions.height}
     >
       <RouterProvider>
-        <AppContent />
+        <RouterView />
       </RouterProvider>
     </box>
   )
 }
 
-function AppContent() {
+function RouterView() {
   const { route } = useRouter()
   return route === 'home' ? <Home /> : <Session />
 }

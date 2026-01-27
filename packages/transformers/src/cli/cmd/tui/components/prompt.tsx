@@ -1,18 +1,13 @@
-import { KeyEvent, MouseEvent } from "@opentui/core";
+import { KeyEvent, MouseEvent, TextareaRenderable } from "@opentui/core";
 import { EmptyBorder } from "./border";
 import { useTheme } from "../composables/theme";
 import { useRouter } from "../composables/router";
 import clipboardy from "clipboardy"
 
 export function Prompt() {
-
-
+  let input: TextareaRenderable
   const { theme, highlight } = useTheme()
   const router = useRouter()
-
-  const submit = () => {
-    process.exit()
-  }
 
   return (
     <>
@@ -37,12 +32,19 @@ export function Prompt() {
             <textarea
               placeholder={`Ask anything... "`}
               textColor={theme.text}
+              ref={(r: TextareaRenderable) => {
+                input = r
+              }}
               onMouseDown={(r: MouseEvent) => r.target?.focus()}
-              onSubmit={submit}
               onKeyDown={(e: KeyEvent) => {
-                if (e.name === 'return') {
+                if (router.route === 'home' && e.name === 'return') {
                   e.preventDefault();
-                  router.navigate('session')
+                  router.navigate({
+                    name: 'session',
+                    query:{
+                      content: input.plainText
+                    }
+                  })
                 }
               }}
               focusedTextColor={theme.text}
