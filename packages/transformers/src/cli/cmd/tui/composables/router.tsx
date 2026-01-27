@@ -1,39 +1,33 @@
-import { createContext, useContext, useState, type ReactNode } from "react"
+import { useState } from "react"
+import { createSimpleContext } from "./context"
 
 export interface Router {
   name: 'home' | 'session',
   query?: Record<string, string>
 }
 
-const RouterContext = createContext<{
-  route: Router['name'],
-  query?: Router['query'],
-  navigate: (to: Router['name'] | Router) => void
-}>({
-  route: 'home',
-  query: {},
-  navigate: () => { }
+
+export const { use: useRouter, provider: RouterProvider } = createSimpleContext({
+  name: 'Router',
+  init: () => {
+    const [router, setRoute] = useState<Router>({
+      name: 'home',
+      query: {}
+    })
+
+    return {
+      get query() {
+        return router.query
+      },
+      get name() {
+        return router.name
+      },
+      get route() {
+        return router
+      },
+      navigate(to: Router['name'] | Router) {
+        setRoute(typeof to === 'string' ? { name: to } : to)
+      }
+    }
+  }
 })
-
-export function RouterProvider({ children }: { children: ReactNode }) {
-  const [router, setRoute] = useState<Router>({
-    name: 'home',
-    query: {}
-  })
-
-  return (
-    <RouterContext.Provider value={{
-      route: router.name,
-      query: router.query,
-      navigate: (router) => setRoute(typeof router === 'string' ? { name: router } : router)
-    }}>
-      {children}
-    </RouterContext.Provider>
-  )
-}
-
-export const useRouter = () => {
-  const context = useContext(RouterContext)
-  if (!context) throw new Error(`router cntext must be used within a context provider`)
-  return context
-}

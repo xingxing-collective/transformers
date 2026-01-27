@@ -11,7 +11,18 @@ const cli = yargs(hideBin(process.argv))
   .help("help", "show help")
   .alias("help", "h")
   .command(TuiThreadCommand)
-  .command(TranslationCommand)
+  .fail((msg, err) => {
+    if (
+      msg?.startsWith("Unknown argument") ||
+      msg?.startsWith("Not enough non-option arguments") ||
+      msg?.startsWith("Invalid values:")
+    ) {
+      if (err) throw err
+      cli.showHelp("log")
+    }
+    if (err) throw err
+    process.exit(1)
+  })
   .strict()
 
 try {
