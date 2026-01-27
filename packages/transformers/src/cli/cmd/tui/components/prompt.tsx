@@ -1,4 +1,4 @@
-import { KeyEvent, MouseEvent, RGBA, type TextareaRenderable } from "@opentui/core";
+import { KeyEvent, MouseEvent, type TextareaRenderable } from "@opentui/core";
 import { EmptyBorder } from "./border";
 import { useRouter } from "../composables/router";
 import { useEffect } from "react";
@@ -29,7 +29,11 @@ export function Prompt(props: PromptProps) {
         }
       })
     }
-    props.onSubmit?.({ input })
+    if (input.plainText) {
+      props.onSubmit?.({ input })
+
+      input.clear()
+    }
   }
 
   return (
@@ -58,12 +62,15 @@ export function Prompt(props: PromptProps) {
               ref={(r: TextareaRenderable) => {
                 input = r
               }}
-              onSubmit={submit}
               onMouseDown={(r: MouseEvent) => r.target?.focus()}
               onKeyDown={(e: KeyEvent) => {
                 if (props.disabled) {
                   e.preventDefault()
                   return
+                }
+                if (e.name == 'return') {
+                  e.preventDefault()
+                  submit()
                 }
               }}
               focusedTextColor={theme.text}
@@ -76,7 +83,7 @@ export function Prompt(props: PromptProps) {
               </text>
               <box flexDirection="row" gap={1}>
                 <text flexShrink={0} fg={theme.text}>
-                  nllb-200-distilled-600M 
+                  nllb-200-distilled-600M
                 </text>
                 <text fg={theme.textMuted}>Xenova</text>
               </box>
