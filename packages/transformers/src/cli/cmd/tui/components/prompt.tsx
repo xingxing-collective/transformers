@@ -1,13 +1,36 @@
-import { KeyEvent, MouseEvent, TextareaRenderable } from "@opentui/core";
+import { KeyEvent, MouseEvent, type TextareaRenderable } from "@opentui/core";
 import { EmptyBorder } from "./border";
 import { useTheme } from "../composables/theme";
 import { useRouter } from "../composables/router";
-import clipboardy from "clipboardy"
+import { useEffect } from "react";
 
-export function Prompt() {
+export type PromptProps = {
+  visible?: boolean
+  disabled?: boolean
+  onSubmit?: ({ input }: { input: TextareaRenderable }) => void
+}
+
+export function Prompt(props: PromptProps) {
   let input: TextareaRenderable
   const { theme, highlight } = useTheme()
   const router = useRouter()
+
+  useEffect(() => {
+    if (props.visible !== false) input?.focus()
+    if (props.visible === false) input?.blur()
+  })
+
+  function submit() {
+    if (router.route == 'home') {
+      router.navigate({
+        name: 'session',
+        query: {
+          content: input.plainText
+        }
+      })
+    }
+    props.onSubmit?.({ input })
+  }
 
   return (
     <>
@@ -35,16 +58,12 @@ export function Prompt() {
               ref={(r: TextareaRenderable) => {
                 input = r
               }}
+              onSubmit={submit}
               onMouseDown={(r: MouseEvent) => r.target?.focus()}
               onKeyDown={(e: KeyEvent) => {
-                if (router.route === 'home' && e.name === 'return') {
-                  e.preventDefault();
-                  router.navigate({
-                    name: 'session',
-                    query:{
-                      content: input.plainText
-                    }
-                  })
+                if (props.disabled) {
+                  e.preventDefault()
+                  return
                 }
               }}
               focusedTextColor={theme.text}
@@ -57,8 +76,9 @@ export function Prompt() {
               </text>
               <box flexDirection="row" gap={1}>
                 <text flexShrink={0} fg={theme.text}>
-                  Xenova/nllb-200-distilled-600M
+                  nllb-200-distilled-600M
                 </text>
+                <text fg={theme.textMuted}>Xenova</text>
               </box>
             </box>
           </box>

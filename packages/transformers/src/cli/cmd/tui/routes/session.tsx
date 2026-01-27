@@ -2,6 +2,7 @@ import { useState } from "react";
 import { SplitBorder } from "../components/border";
 import { useTheme } from "../composables/theme";
 import { useRouter } from "../composables/router";
+import { Prompt } from "../components/prompt";
 
 export interface Message {
   role: 'user' | 'assistant'
@@ -11,17 +12,13 @@ export interface Message {
 export function Session() {
 
   const router = useRouter()
-
-  const defaultMessages: Message[] = router.query?.content ? [
-    {
-      role: 'user',
-      content: router.query.content
-    }
-  ] : []
-
+  const { theme } = useTheme()
+  const defaultMessages: Message[] = router.query?.content ? [{
+    role: 'user',
+    content: router.query.content
+  }] : []
   const [messages, setMessages] = useState<Message[]>(defaultMessages)
 
-  const { theme } = useTheme()
   return (
     <>
       <box flexDirection="row">
@@ -50,6 +47,17 @@ export function Session() {
               })
             }
           </scrollbox>
+
+          <box flexShrink={0}>
+            <Prompt
+              onSubmit={(prompt) => {
+                setMessages(pre => [...pre, {
+                  role: 'user',
+                  content: prompt.input.plainText
+                }])
+              }}
+            />
+          </box>
         </box>
       </box>
     </>
