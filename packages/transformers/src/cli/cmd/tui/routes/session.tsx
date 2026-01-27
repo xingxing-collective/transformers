@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { SplitBorder } from "../components/border";
-//import { useTheme } from "../composables/theme";
+import { useTheme } from "../composables/theme";
 import { useRouter } from "../composables/router";
 import { Prompt } from "../components/prompt";
-import { RGBA } from "@opentui/core";
 
 export interface Message {
   role: 'user' | 'assistant'
@@ -13,15 +12,7 @@ export interface Message {
 export function Session() {
 
   const { query } = useRouter()
-  const { theme } = {
-    theme: {
-      text: RGBA.fromValues(0.93, 0.93, 0.93, 1.00),
-      textMuted: RGBA.fromValues(0.50, 0.50, 0.50, 1.00),
-      backgroundElement: RGBA.fromValues(0.12, 0.12, 0.12, 1.00),
-      border: RGBA.fromValues(0.25, 0.25, 0.25, 1.00),
-      backgroundPanel: RGBA.fromValues(0.15, 0.15, 0.15, 1.00),
-    }
-  }
+  const { theme } = useTheme()
   const defaultMessages: Message[] = query?.content ? [{
     role: 'user',
     content: query.content
@@ -77,16 +68,7 @@ function UserMessage(props: {
   message: Message,
   index: number
 }) {
-  const { theme, highlight } = {
-    theme: {
-      text: RGBA.fromValues(0.93, 0.93, 0.93, 1.00),
-      textMuted: RGBA.fromValues(0.50, 0.50, 0.50, 1.00),
-      backgroundElement: RGBA.fromValues(0.12, 0.12, 0.12, 1.00),
-      border: RGBA.fromValues(0.25, 0.25, 0.25, 1.00),
-      backgroundPanel: RGBA.fromValues(0.15, 0.15, 0.15, 1.00),
-    },
-    highlight: RGBA.fromValues(0.36, 0.61, 0.96, 1.00)
-  }
+  const { theme, highlight } = useTheme()
   return (
     <>
       <box

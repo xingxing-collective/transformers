@@ -1,8 +1,8 @@
 import { KeyEvent, MouseEvent, RGBA, type TextareaRenderable } from "@opentui/core";
 import { EmptyBorder } from "./border";
-//import { useTheme } from "../composables/theme";
 import { useRouter } from "../composables/router";
 import { useEffect } from "react";
+import { useTheme } from "../composables/theme";
 
 export type PromptProps = {
   visible?: boolean
@@ -12,16 +12,7 @@ export type PromptProps = {
 
 export function Prompt(props: PromptProps) {
   let input: TextareaRenderable
-  const { theme, highlight } = {
-    theme: {
-      text: RGBA.fromValues(0.93, 0.93, 0.93, 1.00),
-      textMuted: RGBA.fromValues(0.50, 0.50, 0.50, 1.00),
-      backgroundElement: RGBA.fromValues(0.12, 0.12, 0.12, 1.00),
-      border: RGBA.fromValues(0.25, 0.25, 0.25, 1.00),
-      backgroundPanel: RGBA.fromValues(0.15, 0.15, 0.15, 1.00),
-    },
-    highlight: RGBA.fromValues(0.36, 0.61, 0.96, 1.00)
-  }
+  const { theme, highlight } = useTheme()
   const { name, navigate } = useRouter()
 
   useEffect(() => {
@@ -85,7 +76,7 @@ export function Prompt(props: PromptProps) {
               </text>
               <box flexDirection="row" gap={1}>
                 <text flexShrink={0} fg={theme.text}>
-                  nllb-200-distilled-600M
+                  nllb-200-distilled-600M 
                 </text>
                 <text fg={theme.textMuted}>Xenova</text>
               </box>
