@@ -21,7 +21,7 @@ export namespace Translation {
     }
     static instance: Promise<TranslationPipeline> | null = null;
 
-    static async getInstance(model?: string, options?: PretrainedModelOptions) {
+    static getInstance(model?: string, options?: PretrainedModelOptions) {
       return this.instance ??= pipeline<'translation'>('translation', model ?? this.model, options ?? this.options)
     }
   }
@@ -31,8 +31,8 @@ export namespace Translation {
     tgt_lang?: TranslationLanguages.LanguageCode
   }
 
-  export async function translator(texts: string | string[], config?: TranslationConfig): Promise<TranslationOutput | TranslationOutput[]> {
-    const pipeline = await Translation.getInstance();
+  export function translator(texts: string | string[], config?: TranslationConfig): Promise<TranslationOutput | TranslationOutput[]> {
+    const pipeline = Translation.getInstance();
     // @ts-ignore
     return pipeline(texts, config);
   }

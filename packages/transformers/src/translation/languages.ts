@@ -208,5 +208,5 @@ export namespace TranslationLanguages {
     "Zulu": "zul_Latn"
   } as const
 
-  export type LanguageCode = typeof languages[keyof typeof languages] & string
+  export type LanguageCode = typeof languages[keyof typeof languages]
 }
