@@ -21,19 +21,7 @@ export function Prompt(props: PromptProps) {
   })
 
   function submit() {
-    if (name == 'home') {
-      navigate({
-        name: 'session',
-        query: {
-          content: input.plainText
-        }
-      })
-    }
-    if (input.plainText) {
-      props.onSubmit?.({ input })
-
-      input.clear()
-    }
+    props.onSubmit?.({ input })
   }
 
   return (
@@ -69,8 +57,16 @@ export function Prompt(props: PromptProps) {
                   return
                 }
                 if (e.name == 'return') {
-                  e.preventDefault()
+                  if (name == 'home') {
+                    navigate({
+                      name: 'session',
+                      query: {
+                        content: input.plainText
+                      }
+                    })
+                  }
                   submit()
+                  e.preventDefault()
                 }
               }}
               focusedTextColor={theme.text}

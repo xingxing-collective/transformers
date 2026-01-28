@@ -3,6 +3,8 @@ import { SplitBorder } from "../components/border";
 import { useTheme } from "../composables/theme";
 import { useRouter } from "../composables/router";
 import { Prompt } from "../components/prompt";
+import type { TextareaRenderable } from "@opentui/core";
+import { Translation } from "@/translation"
 
 export interface Message {
   role: 'user' | 'assistant'
@@ -10,15 +12,27 @@ export interface Message {
 }
 
 export function Session() {
-
   const { query } = useRouter()
   const { theme } = useTheme()
-  const defaultMessages: Message[] = query?.content ? [{
-    role: 'user',
-    content: query.content
-  }] : []
-  const [messages, setMessages] = useState<Message[]>(defaultMessages)
+  const [messages, setMessages] = useState<Message[]>([])
+  const translation = new Translation()
 
+  function submit(prompt: { input: TextareaRenderable }) {
+    setMessages(pre => [...pre, {
+      role: 'user',
+      content: prompt.input.plainText
+    }])
+    translation.translator(prompt.input.plainText, {
+      src_lang: 'eng_Latn',
+      tgt_lang: 'zho_Hans'
+    }).then(x => {
+      setMessages(pre => [...pre, {
+        role: 'user',
+        content: x.flat(1)[0].translation_text
+      }])
+    })
+
+  }
   return (
     <>
       <box flexDirection="row">
@@ -39,10 +53,10 @@ export function Session() {
             {
               messages.map((message, index) => {
                 if (message.role === 'user') {
-                  return <UserMessage index={index} message={message} />
+                  return <UserMessage key={index} index={index} message={message} />
                 }
                 if (message.role === 'assistant') {
-
+                  return <AssistantMessage key={index} index={index} message={message} />
                 }
               })
             }
@@ -50,12 +64,7 @@ export function Session() {
 
           <box flexShrink={0}>
             <Prompt
-              onSubmit={(prompt) => {
-                setMessages(pre => [...pre, {
-                  role: 'user',
-                  content: prompt.input.plainText
-                }])
-              }}
+              onSubmit={submit}
             />
           </box>
         </box>
@@ -63,6 +72,7 @@ export function Session() {
     </>
   )
 }
+
 
 function UserMessage(props: {
   message: Message,
@@ -75,7 +85,35 @@ function UserMessage(props: {
         border={["left"]}
         borderColor={highlight}
         customBorderChars={SplitBorder.customBorderChars}
-        marginTop={props.index === 0 ? 0 : 1}
+        marginTop={1}
+      >
+        <box
+          paddingTop={1}
+          paddingBottom={1}
+          paddingLeft={2}
+          backgroundColor={theme.backgroundElement}
+          flexShrink={0}
+        >
+          <text fg={theme.text}>{props.message.content}</text>
+        </box>
+      </box>
+    </>
+  )
+}
+
+function AssistantMessage(props: {
+  message: Message,
+  index: number
+}) {
+  const { theme, highlight } = useTheme()
+
+  return (
+    <>
+      <box
+        border={["left"]}
+        borderColor={highlight}
+        customBorderChars={SplitBorder.customBorderChars}
+        marginTop={1}
       >
         <box
           paddingTop={1}

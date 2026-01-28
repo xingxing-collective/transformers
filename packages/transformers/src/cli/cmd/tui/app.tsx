@@ -24,11 +24,13 @@ function App() {
 
 export function tui() {
   return new Promise<void>(async () => {
-    const renderer = await createCliRenderer()
+    const renderer = await createCliRenderer({
+      exitOnCtrlC: true
+    })
 
     createRoot(renderer).render(
       <RouterProvider>
-        <ThemeProvider mode={'light'}>
+        <ThemeProvider mode={'dark'}>
           <App />
         </ThemeProvider>
       </RouterProvider>
