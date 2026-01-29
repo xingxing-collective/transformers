@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { createStore } from "solid-js/store"
 import { createSimpleContext } from "./context"
 
 export interface Router {
@@ -10,7 +10,7 @@ export interface Router {
 export const { use: useRouter, provider: RouterProvider } = createSimpleContext({
   name: 'Router',
   init: () => {
-    const [router, setRoute] = useState<Router>({
+    const [router, setRoute] = createStore<Router>({
       name: 'home',
       query: {}
     })

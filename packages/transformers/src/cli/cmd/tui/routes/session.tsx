@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { createStore } from "solid-js/store"
 import { SplitBorder } from "../components/border";
 import { useTheme } from "../composables/theme";
 import { useRouter } from "../composables/router";
@@ -13,8 +13,8 @@ export interface Message {
 
 export function Session() {
   const { query } = useRouter()
-  const { theme } = useTheme()
-  const [messages, setMessages] = useState<Message[]>([])
+  const { colors } = useTheme()
+  const [messages, setMessages] = createStore<Message[]>([])
   const translation = new Translation()
 
   function submit(prompt: { input: TextareaRenderable }) {
@@ -45,18 +45,18 @@ export function Session() {
               paddingLeft: 1,
               visible: false,
               trackOptions: {
-                backgroundColor: theme.backgroundElement,
-                foregroundColor: theme.border,
+                backgroundColor: colors.backgroundElement,
+                foregroundColor: colors.border,
               },
             }}
           >
             {
               messages.map((message, index) => {
                 if (message.role === 'user') {
-                  return <UserMessage key={index} index={index} message={message} />
+                  return <UserMessage index={index} message={message} />
                 }
                 if (message.role === 'assistant') {
-                  return <AssistantMessage key={index} index={index} message={message} />
+                  return <AssistantMessage index={index} message={message} />
                 }
               })
             }
@@ -78,7 +78,7 @@ function UserMessage(props: {
   message: Message,
   index: number
 }) {
-  const { theme, highlight } = useTheme()
+  const { colors, highlight } = useTheme()
   return (
     <>
       <box
@@ -91,10 +91,10 @@ function UserMessage(props: {
           paddingTop={1}
           paddingBottom={1}
           paddingLeft={2}
-          backgroundColor={theme.backgroundElement}
+          backgroundColor={colors.backgroundElement}
           flexShrink={0}
         >
-          <text fg={theme.text}>{props.message.content}</text>
+          <text fg={colors.text}>{props.message.content}</text>
         </box>
       </box>
     </>
@@ -105,7 +105,7 @@ function AssistantMessage(props: {
   message: Message,
   index: number
 }) {
-  const { theme, highlight } = useTheme()
+  const { colors, highlight } = useTheme()
 
   return (
     <>
@@ -119,10 +119,10 @@ function AssistantMessage(props: {
           paddingTop={1}
           paddingBottom={1}
           paddingLeft={2}
-          backgroundColor={theme.backgroundElement}
+          backgroundColor={colors.backgroundElement}
           flexShrink={0}
         >
-          <text fg={theme.text}>{props.message.content}</text>
+          <text fg={colors.text}>{props.message.content}</text>
         </box>
       </box>
     </>

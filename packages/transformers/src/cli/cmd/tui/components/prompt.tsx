@@ -1,7 +1,7 @@
 import { KeyEvent, MouseEvent, type TextareaRenderable } from "@opentui/core";
 import { EmptyBorder } from "./border";
 import { useRouter } from "../composables/router";
-import { useEffect } from "react";
+import { createEffect } from "solid-js";
 import { useTheme } from "../composables/theme";
 
 export type PromptProps = {
@@ -12,10 +12,10 @@ export type PromptProps = {
 
 export function Prompt(props: PromptProps) {
   let input: TextareaRenderable
-  const { theme, highlight } = useTheme()
+  const { colors, highlight } = useTheme()
   const { name, navigate } = useRouter()
 
-  useEffect(() => {
+  createEffect(() => {
     if (props.visible !== false) input?.focus()
     if (props.visible === false) input?.blur()
   })
@@ -41,12 +41,12 @@ export function Prompt(props: PromptProps) {
             paddingRight={2}
             paddingTop={1}
             flexShrink={0}
-            backgroundColor={theme.backgroundElement}
+            backgroundColor={colors.backgroundElement}
             flexGrow={1}
           >
             <textarea
               placeholder={`Ask anything... "`}
-              textColor={theme.text}
+              textColor={colors.text}
               ref={(r: TextareaRenderable) => {
                 input = r
               }}
@@ -69,7 +69,7 @@ export function Prompt(props: PromptProps) {
                   e.preventDefault()
                 }
               }}
-              focusedTextColor={theme.text}
+              focusedTextColor={colors.text}
               minHeight={1}
               maxHeight={6}
             />
@@ -78,10 +78,10 @@ export function Prompt(props: PromptProps) {
                 Translation{" "}
               </text>
               <box flexDirection="row" gap={1}>
-                <text flexShrink={0} fg={theme.text}>
+                <text flexShrink={0} fg={colors.text}>
                   nllb-200-distilled-600M
                 </text>
-                <text fg={theme.textMuted}>Xenova</text>
+                <text fg={colors.textMuted}>Xenova</text>
               </box>
             </box>
           </box>
@@ -92,15 +92,15 @@ export function Prompt(props: PromptProps) {
           borderColor={highlight}
           customBorderChars={{
             ...EmptyBorder,
-            vertical: theme.backgroundElement.a !== 0 ? "╹" : " ",
+            vertical: colors.backgroundElement.a !== 0 ? "╹" : " ",
           }}
         >
           <box
             height={1}
             border={["bottom"]}
-            borderColor={theme.backgroundElement}
+            borderColor={colors.backgroundElement}
             customBorderChars={
-              theme.backgroundElement.a !== 0
+              colors.backgroundElement.a !== 0
                 ? {
                   ...EmptyBorder,
                   horizontal: "▀",
