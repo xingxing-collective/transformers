@@ -1,5 +1,6 @@
 import { createStore } from "solid-js/store"
 import { createSimpleContext } from "./context"
+import { createMemo } from "solid-js"
 
 export interface Router {
   name: 'home' | 'session',
@@ -10,23 +11,25 @@ export interface Router {
 export const { use: useRouter, provider: RouterProvider } = createSimpleContext({
   name: 'Router',
   init: () => {
-    const [router, setRoute] = createStore<Router>({
+    const [route, setRoute] = createStore<Router>({
       name: 'home',
       query: {}
     })
 
     return {
       get query() {
-        return router.query
+        return route.query
       },
       get name() {
-        return router.name
-      },
-      get route() {
-        return router
+        return route.name
       },
       navigate(to: Router['name'] | Router) {
-        setRoute(typeof to === 'string' ? { name: to } : to)
+        if (typeof to === 'string') {
+          setRoute("name", to)
+        } else {
+          setRoute('name', to.name)
+          setRoute('query', to.query)
+        }
       }
     }
   }

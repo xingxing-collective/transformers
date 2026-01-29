@@ -3,6 +3,7 @@ import { Home } from "./routes/home"
 import { Session } from "./routes/session"
 import { RouterProvider, useRouter } from "./composables/router"
 import { ThemeProvider, useTheme } from "./composables/theme"
+import { Match, Switch } from "solid-js"
 
 async function getTerminalBackgroundColor(): Promise<"dark" | "light"> {
   // can't set raw mode if not a TTY
@@ -67,16 +68,22 @@ async function getTerminalBackgroundColor(): Promise<"dark" | "light"> {
 function App() {
   const dimensions = useTerminalDimensions()
   const { colors } = useTheme()
-  const { name } = useRouter()
+  const router = useRouter()
+
   return (
     <box
       width={dimensions().width}
       height={dimensions().height}
       backgroundColor={colors.background}
     >
-      {
-        name === 'home' ? <Home /> : <Session />
-      }
+      <Switch>
+        <Match when={router.name === "home"}>
+          <Home />
+        </Match>
+        <Match when={router.name === "session"}>
+          <Session />
+        </Match>
+      </Switch>
     </box>
   )
 }

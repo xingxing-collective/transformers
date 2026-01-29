@@ -21,6 +21,14 @@ export function Prompt(props: PromptProps) {
   })
 
   function submit() {
+    if (name == 'home') {
+      navigate({
+        name: 'session',
+        query: {
+          content: input.plainText
+        }
+      })
+    }
     props.onSubmit?.({ input })
   }
 
@@ -50,23 +58,17 @@ export function Prompt(props: PromptProps) {
               ref={(r: TextareaRenderable) => {
                 input = r
               }}
+              onSubmit={submit}
+              keyBindings={
+                [
+                  { name: "return", action: "submit" }
+                ]
+              }
               onMouseDown={(r: MouseEvent) => r.target?.focus()}
               onKeyDown={(e: KeyEvent) => {
                 if (props.disabled) {
                   e.preventDefault()
                   return
-                }
-                if (e.name == 'return') {
-                  if (name == 'home') {
-                    navigate({
-                      name: 'session',
-                      query: {
-                        content: input.plainText
-                      }
-                    })
-                  }
-                  submit()
-                  e.preventDefault()
                 }
               }}
               focusedTextColor={colors.text}
