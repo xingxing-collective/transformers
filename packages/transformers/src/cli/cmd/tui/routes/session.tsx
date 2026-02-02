@@ -6,30 +6,46 @@ import { Prompt } from "../components/prompt";
 import type { TextareaRenderable } from "@opentui/core";
 import { Translation } from "@/translation"
 
+export interface Seesion {
+  id: number,
+  messages: Message[]
+}
+
 export interface Message {
   role: 'user' | 'assistant'
   content: string
 }
 
 export function Session() {
-  const { query } = useRouter()
+  const router = useRouter()
   const { colors } = useTheme()
-  const [messages, setMessages] = createStore<Message[]>([])
+  const [store, setStore] = createStore<Seesion>({
+    id: Date.now(),
+    messages: []
+  })
   const translation = new Translation()
 
+  function addMessage(message: Message) {
+    setStore((store) => ({
+      id: store.id,
+      messages: [...store.messages, message]
+    }))
+  }
+
   function submit(prompt: { input: TextareaRenderable }) {
-    setMessages(pre => [...pre, {
+    addMessage({
       role: 'user',
       content: prompt.input.plainText
-    }])
+    })
+
     translation.translator(prompt.input.plainText, {
       src_lang: 'eng_Latn',
       tgt_lang: 'zho_Hans'
     }).then(x => {
-      setMessages(pre => [...pre, {
-        role: 'user',
-        content: x.flat(1)[0].translation_text
-      }])
+      addMessage({
+        role: 'assistant',
+        content: x.flat(1)[0]?.translation_text
+      })
     })
 
   }
@@ -51,7 +67,7 @@ export function Session() {
             }}
           >
             {
-              messages.map((message, index) => {
+              store.messages.map((message, index) => {
                 if (message.role === 'user') {
                   return <UserMessage index={index} message={message} />
                 }
