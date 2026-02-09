@@ -35,7 +35,9 @@ export const TranslationCommand = cmd({
     let src_lang = args.src_lang as TranslationLanguages.LanguageCode
     let tgt_lang = args.tgt_lang as TranslationLanguages.LanguageCode
 
-    const output = await Translation.translator(message, {
+    const translation = new Translation()
+
+    const output = await translation.translator(message, {
       src_lang,
       tgt_lang
     })
