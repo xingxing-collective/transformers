@@ -8,12 +8,14 @@
     "dev": "bun run --conditions=browser ./src/index.ts"
   },
   "dependencies": {
+    "@huggingface/hub": "^2.8.1",
     "@huggingface/transformers": "^3.8.1",
     "@opentui/core": "^0.1.74",
     "@opentui/solid": "^0.1.74",
     "clipboardy": "^5.1.0",
-    "yargs": "18.0.0",
-    "solid-js": "catalog:"
+    "defu": "^6.1.4",
+    "solid-js": "catalog:",
+    "yargs": "18.0.0"
   },
   "devDependencies": {
     "@types/yargs": "17.0.35",
